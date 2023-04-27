@@ -10,7 +10,7 @@ It includes the following components:
 
 Respective variables are declared in *variables.tf*.
 You have to create a *terraform.tfvars* file and assign a value to the variables which fits to your needs.
-The *terraform.tfvars* is excluded from this repository. The structure is shown in the following:
+The *terraform.tfvars* is excluded from this repository. The structure of this file is shown in the following:
 
 ```#tfvars
 # Rename to values which fit to your requirements
