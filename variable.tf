@@ -28,5 +28,29 @@ variable "delegation" {
 variable "service_delegation" {
         }
 
+#ANF account
+variable "anf-account-name" {
+    }
+variable "anf-account-tags" {
+    type = map
+}
 
+#ANF Pool
+variable "anf-pool-name" {}
+variable "service-level" {
+    type = string
+}
+variable "pool-size" {
+    type = number
+}
 
+#ANF volume
+variable "anf-volume-name" {}
+variable "volume-path" {}
+variable "protocols" {
+    type = list
+}
+variable "security-style" {}
+variable "storage-quota-gb" {
+    type = number
+}

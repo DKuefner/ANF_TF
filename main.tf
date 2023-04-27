@@ -43,50 +43,49 @@ resource "azurerm_subnet" "anf-subnet" {
   }
 }
 
-## Create Azure NetApp Files resource
-#resource "azurerm_netapp_account" "anf-account" {
-#  name                = "dk-anf-account"
-#  location            = azurerm_resource_group.rg.location
-#  resource_group_name = azurerm_resource_group.rg.name
-#  tags                = {
-#    environment = "dk-anf-dev"
-#  }
-#}
+# Create Azure NetApp Files resource
+resource "azurerm_netapp_account" "anf-account" {
+  name                = var.anf-account-name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.anf-account-tags  
+}
 
-#resource "azurerm_netapp_pool" "anf-pool" {
-#  name                = "dk-anf-pool1"
-#  location            = azurerm_resource_group.rg.location
-#  resource_group_name = azurerm_resource_group.rg.name
-#  service_level       = "Standard"
-#  size_in_tb          = 4
-#  account_name = azurerm_netapp_account.anf-account.name
-#}
+#ANF pool
+resource "azurerm_netapp_pool" "anf-pool" {
+  name                = var.anf-pool-name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  service_level       = var.service-level
+  size_in_tb          = var.pool-size
+  account_name = azurerm_netapp_account.anf-account.name
+}
 
-##Creat ANF Volume
-#resource "azurerm_netapp_volume" "anf-volume1" {
-#  lifecycle {
-#    prevent_destroy = false
-#  }
-#
-#  name                       = "dk-anf-volume1"
-#  location                   = azurerm_resource_group.rg.location
-#  resource_group_name        = azurerm_resource_group.rg.name
-#  account_name               = azurerm_netapp_account.anf-account.name
-#  pool_name                  = azurerm_netapp_pool.anf-pool.name
-#  volume_path                = "dk-file-path1"
-#  service_level              = "Standard"
-#  subnet_id                  = azurerm_subnet.anf-subnet.id
-#  protocols                  = ["NFSv3"]
-#  security_style             = "Unix"
-#  storage_quota_in_gb        = 100
-#}
+#ANF Volume
+resource "azurerm_netapp_volume" "anf-volume1" {
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  name                       = var.anf-volume-name
+  location                   = azurerm_resource_group.rg.location
+  resource_group_name        = azurerm_resource_group.rg.name
+  account_name               = azurerm_netapp_account.anf-account.name
+  pool_name                  = azurerm_netapp_pool.anf-pool.name
+  volume_path                = var.volume-path
+  service_level              = var.service-level
+  subnet_id                  = azurerm_subnet.anf-subnet.id
+  protocols                  = var.protocols
+  security_style             = var.security-style
+  storage_quota_in_gb        = var.storage-quota-gb
+}
 
 
-# Output ANF account ID and access endpoint
-#output "anf_account_id" {
-#  value = azurerm_netapp_account.anf-account.id
-#}
+# Output ANF account ID and volume path
+output "anf_account_id" {
+  value = azurerm_netapp_account.anf-account.id
+}
 
-#output "anf_account_endpoint" {
-#  value = azurerm_netapp_account.anf-account.access.endpoint
-#}
+output "anf_volume-path" {
+  value = azurerm_netapp_volume.anf-volume1.volume_path
+}
